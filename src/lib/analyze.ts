@@ -249,6 +249,8 @@ const SPECIAL_FILE_PATTERNS: Array<{ test: (p: string) => boolean; badge: TechBa
 function detectLanguagesFromTree(files: string[]): TechBadge[] {
   const counts: Record<string, number> = {};
   for (const file of files) {
+    // Only consider files that actually have an extension (contain a ".")
+    if (!file.includes(".")) continue;
     const ext = file.split(".").pop()?.toLowerCase();
     if (ext && EXTENSION_LANGUAGE_MAP[ext]) {
       const name = EXTENSION_LANGUAGE_MAP[ext].name;
@@ -404,8 +406,8 @@ async function detectTechStack(
 
 function extractSummaryFromReadme(content: string, maxLength: number): string {
   const text = content
-    .replace(/!\[.*?\]\(.*?\)/g, "")          // images
-    .replace(/<[^>]+>/g, "")                   // HTML tags
+    .replace(/<\/?[a-zA-Z][^>]*>?/g, "")        // HTML tags (complete and incomplete)
+    .replace(/!\[.*?\]\(.*?\)/g, "")              // images
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")   // links (keep label)
     .replace(/^#{1,6}\s+.+$/gm, "")            // headers
     .replace(/^[-*_]{3,}$/gm, "")              // horizontal rules
@@ -425,7 +427,7 @@ function extractSummaryFromReadme(content: string, maxLength: number): string {
     cut.lastIndexOf("! "),
     cut.lastIndexOf("? ")
   );
-  if (lastSentence > maxLength * 0.5) {
+  if (lastSentence !== -1 && lastSentence > maxLength * 0.5) {
     return cut.slice(0, lastSentence + 1).trim();
   }
   return cut.trim() + "…";

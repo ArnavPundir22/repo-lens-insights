@@ -38,7 +38,7 @@ const ContributorInsights = ({ commitActivity, contributors }: ContributorInsigh
       {/* Section header */}
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 text-primary" />
-        <h3 className="font-medium text-sm text-foreground">Activity &amp; Contributors</h3>
+        <h3 className="font-medium text-sm text-foreground">Activity & Contributors</h3>
       </div>
 
       {/* Commit activity row */}
@@ -104,7 +104,7 @@ const ContributorInsights = ({ commitActivity, contributors }: ContributorInsigh
                     {contributor.login}
                   </p>
                   <p className="text-xs text-muted-foreground leading-none mt-0.5">
-                    {contributor.contributions.toLocaleString()} commits
+                    {contributor.contributions.toLocaleString()} contributions
                   </p>
                 </div>
               </a>
